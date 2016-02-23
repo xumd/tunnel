@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<link href="${imgRoot}/login/style/style_login.css" rel="stylesheet" type="text/css" />
+<title>地质保障管理预警平台</title>
+<#include "/common/css.html"/>
+<#include "/common/common.html"/>
+</head>
+<style type="text/css">
+        .ui-dialog {
+        	background: url(img/alert_bg.jpg);
+        	width: 357px;
+        	height: 207px;
+        }
+        
+        .ui-dialog .ui-dialog-titlebar {
+            margin: 0;
+            border-top: 0;
+            background: #fff;
+            filter: alpha(opacity:70);
+            opacity: 0.7;
+            border: 0px solid;
+        }
+        
+        .ui-dialog .ui-dialog-buttonpane, .ui-dialog .ui-dialog-content{
+            margin: 0;
+            border-top: 0;
+            background: #fff;
+            filter: alpha(opacity:70);
+            opacity: 0.7;
+        }
+        .ui-dialog-buttonpane {
+            background: #fff;
+            filter: alpha(opacity:70);
+            opacity: 0.7;
+        }
+        .loginmain h1 {
+        	text-align: left;
+        }
+    </style>
+<script language="javascript">
+function registry(){
+	top.location.href = "${rc.contextPath}/registry.htm";
+}
+function forgetPassword(){
+var userCode = document.forms[0].userCode.value;
+	if(userCode.length == 0){
+		 alertMsg("用户不能为空,请输入用户！")
+		return;
+	}
+	var  registryUrl =document.location.protocol+"//"+document.location.host;
+	$.ajax({
+		type: "POST",
+	    url: "${rc.contextPath}/registry.htm",
+	    cache: false ,
+	    data: {method: "forgetPassword", userCode: userCode ,registryUrl:registryUrl} ,
+	    success: function(data) {
+	    alertMsg(data.msg);
+	  }
+	});
+}
+
+window.onload=function() {
+	if(window.parent != window){
+		window.parent.window.location.href = '${rc.contextPath}/login.htm';
+	}
+	document.getElementById("userCode").focus();
+}
+
+function checkMe(frm){
+	if(frm.userCode.value==""){
+		alertMsg("您输入的用户名为空，请重新输入！","fcUserCode();")
+		return false;
+	}
+	if(frm.password.value==""){
+		alertMsg("您输入的密码为空，请重新输入！","fcPwd();")
+		return false;
+	}
+	return true;
+}
+
+function logon() {
+	var frm = document.forms['loginFrm'];
+	if (checkMe(frm)) {
+		frm.submit();
+	}
+}
+
+function fcUserCode(){
+	document.forms["loginFrm"].userCode.focus();
+}
+
+function fcPwd(){
+	document.forms["loginFrm"].password.focus();
+}
+
+$(function(){
+    $('#loginFrm input').keydown(function(e) {
+        if (e.keyCode == 13) {
+            $('#loginFrm').submit();
+        }
+    });
+});
+//
+</script>
+<body>
+    <form id="loginFrm" name="loginFrm" action="${rc.contextPath}/login.htm" method="POST">
+        <input type="hidden" name="method" value="login" />
+        <div class="loginmain">
+        	<img src="${imgRoot}/img/login-logo.png" width="88px" height="88px" align="left" valign="middle" style="padding: 298px 0 0 0;margin-left:2px;margin-top:1px;">
+            <h1>地质保障管理预警平台</h1>
+            <div class="login">
+                <ul class="item">
+                    <li class="t1">用户名称</li>
+                    <li><input name="userCode" id="userCode" value="${userCode?default('')}"  type="text" class="txtbox" />  </li>
+                </ul>
+                <ul class="item">
+                    <li class="t1">用户密码</li>
+                    <li><input type="password" name="password" class="txtbox" /></li>
+                </ul>
+                <div class="loginbtn" onClick="javascript:logon();">登录</div>
+            </div>
+        </div>
+     </form>
+</body>
+</html>
