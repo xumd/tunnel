@@ -1,0 +1,15 @@
+将install/includes/lib_installer.php中的第31行return cls_image::gd_version();改成：
+
+$p = new cls_image();
+return $p->gd_version();
+
+
+打开cls_template.php文件中发现下面这段代码：
+
+
+$tag_sel = array_shift(explode(' ', $tag));
+忘记说了，我的PHP版本是5.4.19，PHP5.3以上默认只能传递具体的变量，而不能通过函数返回值传递，所以这段代码中的explode就得移出来重新赋值了
+
+$tagArr = explode(' ', $tag);
+$tag_sel = array_shift($tagArr);
+这样之后顶部的报错没掉了，左侧和底部的报错还需要去ecshop的后台点击清除缓存才能去除。
